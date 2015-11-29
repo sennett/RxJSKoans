@@ -27,7 +27,7 @@ test('composable before and after', function () {
     .tap(function (n) { b += n; })
     .subscribe();
 
-  equal(__, a);
+  equal('123456', a);
   equal('246', b);
 });
 
@@ -36,7 +36,7 @@ test('we wrote this', function () {
       names = ["Bart", "Marge", "Wes", "Linus", "Erik", "Matt"];
 
   Observable.from(names)
-    .filter(function (n) { return n.length <= __; })
+    .filter(function (n) { return n.length <= 4; })
     .subscribe(received.push.bind(received));
 
   equal('Bart,Wes,Erik,Matt', received);
@@ -47,20 +47,25 @@ test('converting events', function () {
       names = ["wE", "hOpE", "yOU", "aRe", "eNJoyIng", "tHiS"];
 
   Observable.from(names)
-    .map(function (x) { return x.__(); })
-    .subscribe(function (x) { received += x + ' '; });
+    .map(function (x) { return x.toLowerCase(); })
+    .reduce(function (acc, x) { return acc + ' ' + x; })
+    .subscribe(function (x) { received = x; });
 
-  equal('we hope you are enjoying this ', received);
+  equal('we hope you are enjoying this', received);
 });
 
 test('create a more relevant stream', function () {
   var received = '',
       mouseXMovements = [100, 200, 150],
-      relativemouse = Observable.from(mouseXMovements).map(function (x) { return x - __; });
+      relativemouse = Observable.from(mouseXMovements).map(function (x) { return x - 50; });
 
-  relativemouse.subscribe(function (x) { received += x + ', '; });
+  relativemouse
+    .reduce(function(acc, x){
+      return acc + ', ' + x;
+    })
+    .subscribe(function (x) { received = x; });
 
-  equal('50, 150, 100, ', received);
+  equal('50, 150, 100', received);
 });
 
 test('checking everything', function () {
@@ -71,14 +76,14 @@ test('checking everything', function () {
     .every(function (x) { return x % 2 === 0; })
     .subscribe(function (x) { received = x; });
 
-  equal(__, received);
+  equal(true, received);
 });
 
 test('composition means the sum is greater than the parts', function () {
   var received = 0,
       numbers = Observable.range(1, 10);
 
-  numbers.filter(function (x) { return x > __; })
+  numbers.filter(function (x) { return x > 8; })
     .sum()
     .subscribe(function (x) { received = x; });
 
