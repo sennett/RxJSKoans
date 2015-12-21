@@ -10,7 +10,7 @@ var __ = 'Fill in the blank';
 asyncTest('launching an event via a scheduler', function () {
   var state = null;
   var received = '';
-  var delay = 600; // Fix this value
+  var delay = 500; // Fix this value
   Scheduler.default.scheduleFuture(state, delay, function (scheduler, state) {
     received = 'Finished';
   });
@@ -23,7 +23,7 @@ asyncTest('launching an event via a scheduler', function () {
 
 asyncTest('launching an event in the future', function () {
   var received = null;
-  var time = __;
+  var time = 500;
 
   var people = new Subject();
   people.delay(time).subscribe(function (x) { received = x; });
@@ -38,8 +38,8 @@ asyncTest('launching an event in the future', function () {
 asyncTest('a watched pot', function () {
   var received = '';
   var delay = 500;
-  var timeout = __;
-  var timeoutEvent = Observable.just('Tepid');
+  var timeout = 502;
+  var timeoutEvent = Observable.range(10, 20);
 
   Observable
     .just('Boiling')
@@ -55,7 +55,7 @@ asyncTest('a watched pot', function () {
 
 asyncTest('you can place a time limit on how long an event should take', function () {
   var received = [];
-  var timeout = 2000;
+  var timeout = 200;
   var timeoutEvent = Observable.just('Tepid');
   var temperatures = new Subject();
 
@@ -65,12 +65,12 @@ asyncTest('you can place a time limit on how long an event should take', functio
 
   setTimeout(function () {
     temperatures.onNext('Boiling');
-  }, 3000);
+  }, 300);
 
   setTimeout(function () {
-    equal(__, received.join(', '));
+    equal('Started, Tepid', received.join(', '));
     start();
-  }, 4000);
+  }, 400);
 });
 
 asyncTest('debouncing', function () {
@@ -92,7 +92,7 @@ asyncTest('debouncing', function () {
     events.onNext('rxjs');
 
     setTimeout(function () {
-      equal(__, received.join(' '));
+      equal('from rxjs', received.join(' '));
       start();
     }, 120);
   }, 120);
@@ -118,7 +118,7 @@ asyncTest('buffering', function () {
     events.onNext('s');
 
     setTimeout(function () {
-      equal(__, received.join(' '));
+      equal('RxJS Rocks', received.join(' '));
       start();
     }, 120);
   }, 120);
@@ -141,7 +141,7 @@ asyncTest('time between calls', function () {
     setTimeout(function () {
       events.onNext('down');
 
-      equal(__, received.join(' '));
+      equal('slow down', received.join(' '));
       start();
     }, 120);
   }, 120);
